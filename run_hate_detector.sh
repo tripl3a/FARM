@@ -2,4 +2,4 @@
 
 #python hate_detector/run_experiments.py
 
-python hate_detector/doc_classifier.py
+python hate_detector/nohate_classifier.py
