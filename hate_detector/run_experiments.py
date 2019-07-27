@@ -3,4 +3,4 @@
 # run_experiment(experiments[0])
 
 # import another script to actually execute it
-from examples import doc_classification
+import examples.doc_classification
