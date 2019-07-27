@@ -2,7 +2,7 @@
 import logging
 
 from farm.data_handler.data_silo import DataSilo
-from farm.data_handler.processor import GermEval18CoarseProcessor
+from farm.data_handler.processor import NoHateCoarseProcessor
 from farm.experiment import initialize_optimizer
 from farm.infer import Inferencer
 from farm.modeling.adaptive_model import AdaptiveModel
@@ -11,6 +11,11 @@ from farm.modeling.prediction_head import TextClassificationHead
 from farm.modeling.tokenization import BertTokenizer
 from farm.train import Trainer
 from farm.utils import set_all_seeds, MLFlowLogger, initialize_device_settings
+
+DATA_DIR = "/home/aallhorn/data/FU_data_full"
+SAVE_DIR = "/home/aallhorn/output/nohate01"
+#DATA_DIR = "/tlhd/data/modeling/FU_data_full"
+#SAVE_DIR = "/tlhd/models/nohate01"
 
 logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
@@ -38,7 +43,7 @@ tokenizer = BertTokenizer.from_pretrained(
 # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
 processor = NoHateCoarseProcessor(tokenizer=tokenizer,
                           max_seq_len=128,
-                          data_dir="/home/aallhorn/data/FU_data_full")
+                          data_dir=DATA_DIR)
 
 # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
 data_silo = DataSilo(
@@ -81,16 +86,15 @@ trainer = Trainer(
 model = trainer.train(model)
 
 # 8. Hooray! You have a model. Store it:
-save_dir = "/home/aallhorn/output/nohate01"
-model.save(save_dir)
-processor.save(save_dir)
+model.save(SAVE_DIR)
+processor.save(SAVE_DIR)
 
 # 9. Load it & harvest your fruits (Inference)
 basic_texts = [
     {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
     {"text": "Martin Müller spielt Handball in Berlin"},
 ]
-model = Inferencer(save_dir)
+model = Inferencer(SAVE_DIR)
 result = model.run_inference(dicts=basic_texts)
 print(result)
 
