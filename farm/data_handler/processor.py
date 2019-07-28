@@ -324,7 +324,7 @@ class NoHateCoarseProcessor(Processor):
     delimiter = "\t"
     quotechar = '"'
     skiprows = [0]
-    columns = ["label", "b_string"]
+    columns = ["label", "text"]
 
     def __init__(
         self,
@@ -363,7 +363,7 @@ class NoHateCoarseProcessor(Processor):
     def _dict_to_samples(self, dict: dict) -> [Sample]:
         # this tokenization also stores offsets
         tokenized = tokenize_with_metadata(
-            dict["b_string"], self.tokenizer, self.max_seq_len
+            dict["text"], self.tokenizer, self.max_seq_len
         )
         return [Sample(id=None, clear_text=dict, tokenized=tokenized)]
 
