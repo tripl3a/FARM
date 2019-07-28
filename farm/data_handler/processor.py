@@ -322,7 +322,7 @@ class NoHateCoarseProcessor(Processor):
 
     # Custom Processor attributes
     delimiter = "\t"
-    #quotechar = "\""
+    quotechar = '"'
     skiprows = [0]
     columns = ["label", "b_string"]
 
@@ -354,7 +354,7 @@ class NoHateCoarseProcessor(Processor):
         dicts = read_tsv(
             filename=file,
             delimiter=self.delimiter,
-            #quotechar=self.quotechar,
+            quotechar=self.quotechar,
             skiprows=self.skiprows,
             columns=self.columns
         )
