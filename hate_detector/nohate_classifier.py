@@ -91,8 +91,8 @@ processor.save(SAVE_DIR)
 
 # 9. Load it & harvest your fruits (Inference)
 basic_texts = [
-    {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
-    {"text": "Martin Müller spielt Handball in Berlin"},
+    {"b_string": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
+    {"b_string": "Martin Müller spielt Handball in Berlin"},
 ]
 model = Inferencer(SAVE_DIR)
 result = model.run_inference(dicts=basic_texts)
