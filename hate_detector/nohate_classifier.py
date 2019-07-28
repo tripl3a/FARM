@@ -12,8 +12,9 @@ from farm.modeling.tokenization import BertTokenizer
 from farm.train import Trainer
 from farm.utils import set_all_seeds, MLFlowLogger, initialize_device_settings
 
+CACHE_DIR = "/home/aallhorn/cache"
 DATA_DIR = "/home/aallhorn/data/FU_data_full"
-SAVE_DIR = "/home/aallhorn/output/nohate01"
+OUTPUT_DIR = "/home/aallhorn/output/nohate01"
 #DATA_DIR = "/tlhd/data/modeling/FU_data_full"
 #SAVE_DIR = "/tlhd/models/nohate01"
 
@@ -38,7 +39,8 @@ lang_model = "bert-base-german-cased"
 # 1.Create a tokenizer
 tokenizer = BertTokenizer.from_pretrained(
     pretrained_model_name_or_path=lang_model,
-    do_lower_case=False)
+    do_lower_case=False,
+    cache_dir=CACHE_DIR)
 
 # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
 processor = NoHateCoarseProcessor(tokenizer=tokenizer,
@@ -86,15 +88,15 @@ trainer = Trainer(
 model = trainer.train(model)
 
 # 8. Hooray! You have a model. Store it:
-model.save(SAVE_DIR)
-processor.save(SAVE_DIR)
+model.save(OUTPUT_DIR)
+processor.save(OUTPUT_DIR)
 
 # 9. Load it & harvest your fruits (Inference)
 basic_texts = [
     {"b_string": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
     {"b_string": "Martin Müller spielt Handball in Berlin"},
 ]
-model = Inferencer(SAVE_DIR)
+model = Inferencer(OUTPUT_DIR)
 result = model.run_inference(dicts=basic_texts)
 print(result)
 
