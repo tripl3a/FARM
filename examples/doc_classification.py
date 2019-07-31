@@ -83,7 +83,7 @@ trainer = Trainer(
 model = trainer.train(model)
 
 # 8. Hooray! You have a model. Store it:
-save_dir = "save/bert-german-doc-tutorial"
+save_dir = "saved_models/bert-german-doc-tutorial"
 model.save(save_dir)
 processor.save(save_dir)
 
@@ -92,7 +92,7 @@ basic_texts = [
     {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
     {"text": "Martin Müller spielt Handball in Berlin"},
 ]
-model = Inferencer(save_dir)
+model = Inferencer.load(save_dir)
 result = model.run_inference(dicts=basic_texts)
 print(result)
 

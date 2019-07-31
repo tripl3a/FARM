@@ -1,5 +1,5 @@
 
-.. image:: docs/logo_with_name.png
+.. image:: https://github.com/deepset-ai/FARM/blob/master/docs/logo_with_name.png?raw=true
     :width: 383
     :height: 116
     :align: left
@@ -9,7 +9,7 @@
 (**F**\ ramework for **A**\ dapting **R**\ epresentation **M**\ odels)
 
 What is it?
-########
+############
 FARM makes cutting edge **Transfer Learning** for NLP simple. 
 It is a home for all species of pretrained language models (e.g. BERT) that can be adapted to different down-stream
 tasks.
@@ -21,7 +21,7 @@ Have a look at `this blog post <https://www.digitalminds.io/blog/transfer_learni
  or see the `full documentation <https://farm.deepset.ai>`_ for more details about FARM
 
 Core features
-########
+##############
 - Easy adaptation of pretrained language models (e.g. BERT) to your own use case
    - The Processor class makes it easy to define the data processing needed for your task
 - Modular design of language model and prediction heads
@@ -34,19 +34,24 @@ Core features
 Installation
 #############
 
-The package is tested with Python 3.7.::
+Recommended (because of active development)::
 
     git clone https://github.com/deepset-ai/FARM.git
     cd FARM
     pip install -r requirements.txt
-    pip install .
+    pip install --editable .
 
+If problems occur, please do a git pull. the --editable flag will update changes immediately.
+
+With pip::
+
+    pip install farm
 
 Basic Usage
 ############
 
 1. Train a downstream model
-**********************
+****************************
 FARM offers two modes for model training:
 
 **Option 1: Run experiment(s) from config**::
@@ -82,19 +87,21 @@ FARM offers two modes for model training:
     # 7. Let it grow
     model = trainer.train(model)
 
-See this `tutorial <https://github.com/deepset-ai/FARM/blob/master/tutorials/1_farm_building_blocks.ipynb>`_ for details.
+See this `Jupyter notebook <https://github.com/deepset-ai/FARM/blob/master/tutorials/1_farm_building_blocks.ipynb>`_
+or the same code in a `Colab notebook <https://colab.research.google.com/drive/130_7dgVC3VdLBPhiEkGULHmqSlflhmVMfor>`_
+for an interactive tutorial.
 
 *Usecases:* Custom datasets, language models, prediction heads ...
 
 Metrics and parameters of your model training get automatically logged via MLflow. We provide a `public MLflow server <https://public-mlflow.deepset.ai/>`_ for testing and learning purposes. Check it out to see your own experiment results!
 
 2. Run Inference (API + UI)
-**********************
+****************************
 
 * Run :code:`docker-compose up`
 * Open http://localhost:3000 in your browser
 
-.. image:: docs/inference-api-screen.png
+.. image:: https://github.com/deepset-ai/FARM/blob/master/docs/inference-api-screen.png?raw=true
     :alt: FARM Inferennce UI
 
 One docker container exposes a REST API (localhost:5000) and another one runs a simple demo UI (localhost:3000).
