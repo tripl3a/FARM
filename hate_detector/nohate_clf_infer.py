@@ -1,5 +1,5 @@
 # coding=utf-8
-#%%
+
 from farm.infer import Inferencer
 import pandas as pd
 import os
@@ -7,38 +7,34 @@ import os
 DATA_DIR = "/tlhd/data/modeling/FU_data_subsample"
 OUTPUT_DIR = "/tlhd/models/nohate01"
 
-# Load saved model to make predictions
-model = Inferencer.load(OUTPUT_DIR)
-
-# store texts with predictions for qualitative analysis
-
+# load test data
 test_file = os.path.join(DATA_DIR, "coarse_test.tsv")
 df_test = pd.read_csv(filepath_or_buffer=test_file, delimiter="\t")
 
 # build list of dicts for FARM
 texts = []
-for text in df_test["text"].values:
-    texts.append({"text": text,
-                  "y_true": 1})
+for index, row in df_test.iterrows():
+    texts.append({"text": row["text"],
+                  "true_label": row["label"]})
 
+# Load saved model and make predictions
+model = Inferencer.load(OUTPUT_DIR)
 result = model.run_inference(dicts=texts)
 
-y_pred, probs, tasks = [], [], []
-i = 0
+y_true, y_pred, probs, contexts = [], [], [], []
 for batch in result:
     for p in batch["predictions"]:
-        if df_test.iloc[i]["text"] != p["context"]:
-            raise ValueError("Order of input data and inference results does not match!")
-        i += 1
+        y_true.append(p["true_label"])
         y_pred.append(p["label"])
         probs.append(p["probability"])
-        tasks.append(batch["task"])
+        contexts.append(p["context"])
 
-#%%
 df_result = pd.DataFrame({
-    "y_true": df_test["label"],
+    "y_true": y_true,
     "y_pred": y_pred,
     "probability": probs,
-    "text": df_test["text"]
+    "text": contexts
 })
 print(df_result)
+
+
