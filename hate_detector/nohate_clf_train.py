@@ -106,10 +106,10 @@ def main():
 
     # 9. Load it & harvest your fruits (Inference)
     basic_texts = [
-        {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei"},
-        {"text": "Martin Müller spielt Handball in Berlin"},
+        {"text": "Schartau sagte dem Tagesspiegel, dass Fischer ein Idiot sei".encode("utf-8")},
+        {"text": "Martin Müller spielt Handball in Berlin".encode("utf-8")},
     ]
-    model = Inferencer(args.output_dir)
+    model = Inferencer.load(args.output_dir)
     result = model.run_inference(dicts=basic_texts)
     print(result)
 
