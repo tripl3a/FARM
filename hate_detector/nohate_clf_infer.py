@@ -5,34 +5,30 @@ import pandas as pd
 import os
 
 DATA_DIR = "/tlhd/data/modeling/FU_data_subsample"
-OUTPUT_DIR = "/tlhd/models/nohate01"
+SAVE_DIR = "/tlhd/models/nohate01"
 
-# Load saved model to make predictions
-model = Inferencer.load(OUTPUT_DIR)
-
-# store texts with predictions for qualitative analysis
-
+# load test data
 test_file = os.path.join(DATA_DIR, "coarse_test.tsv")
 df_test = pd.read_csv(filepath_or_buffer=test_file, delimiter="\t")
 
 # build list of dicts for FARM
 texts = []
 for text in df_test["text"].values:
-    texts.append({"text": text,
-                  "y_true": 1})
+    texts.append({"text": text})
 
+# Load saved model to make predictions
+model = Inferencer.load(SAVE_DIR)
 result = model.run_inference(dicts=texts)
 
-y_pred, probs, tasks = [], [], []
+y_pred, probs = [], []
 i = 0
 for batch in result:
     for p in batch["predictions"]:
         if df_test.iloc[i]["text"] != p["context"]:
-            raise ValueError("Order of input data and inference results does not match!")
+            raise Exception("Order of input data and inference results does not match!")
         i += 1
         y_pred.append(p["label"])
         probs.append(p["probability"])
-        tasks.append(batch["task"])
 
 #%%
 df_result = pd.DataFrame({
@@ -42,3 +38,4 @@ df_result = pd.DataFrame({
     "text": df_test["text"]
 })
 print(df_result)
+df_result.to_csv(os.path.join(DATA_DIR, "coarse_test_infer_results.csv"))
