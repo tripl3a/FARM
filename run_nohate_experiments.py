@@ -3,7 +3,7 @@ from farm.experiment import run_experiment, load_experiments
 
 def main():
     config_files = [
-        "experiments/text_classification/noHateCoarse_config04.json"
+        "experiments/text_classification/noHateCoarse_config05.json"
     ]
 
     for conf_file in config_files:
