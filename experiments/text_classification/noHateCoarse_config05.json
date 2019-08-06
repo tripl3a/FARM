@@ -2,7 +2,7 @@
   "general": {
     "cache_dir":  {"value": null, "default": "/home/aallhorn/cache", "desc": "Path for storing pre-trained models downloaded from s3."},
     "data_dir":   {"value": null, "default": "/home/aallhorn/data/FU_data_full", "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
-    "output_dir": {"value": "/home/aallhorn/output/nohate01", "default": "", "desc": "Output directory where model predictions and checkpoints will be saved."},
+    "output_dir": {"value": "/home/aallhorn/output/nohate05", "default": "", "desc": "Output directory where model predictions and checkpoints will be saved."},
 
     "cuda":        {"value": null, "default": true, "desc": "CUDA flag,  uses CUDA if available."},
     "local_rank":  {"value": null, "default": -1, "desc": "If local_rank == -1 -> multiGPU mode on one machine, other values signal distributed computation across several nodes (apex install required)."},
@@ -34,7 +34,7 @@
 
   "logging": {
     "mlflow_experiment": {"value": null, "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
-    "mlflow_run_name":   {"value": "NoHateCoarse_config01", "default": null, "desc": "Name of the particular run for mlflow"},
+    "mlflow_run_name":   {"value": "NoHateCoarse_config05", "default": null, "desc": "Name of the particular run for mlflow"},
 
     "eval_every":     {"value": null, "default": 30, "desc": "Steps per training loop (batches) required for evaluation on dev set. Set to 0 when you do not want to do evaluation on dev set during training."},
     "mlflow_url":     {"value": null, "default": "https://public-mlflow.deepset.ai/", "desc": "Mlflow server for tracking experiments (e.g. http://80.123.45.167:5000/)"},
