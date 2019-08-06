@@ -5,10 +5,9 @@ from abc import ABC
 import random
 import logging
 import json
+from tqdm import tqdm
 
-from farm.modeling.tokenization import BertTokenizer
-
-from farm.modeling.tokenization import tokenize_with_metadata
+from farm.modeling.tokenization import BertTokenizer, tokenize_with_metadata
 
 from farm.data_handler.utils import (
     read_tsv,
@@ -16,7 +15,6 @@ from farm.data_handler.utils import (
     read_ner_file,
     read_squad_file,
 )
-from farm.file_utils import create_folder
 from farm.data_handler.samples import (
     Sample,
     SampleBasket,
@@ -32,6 +30,7 @@ from farm.data_handler.input_features import (
 from farm.data_handler.dataset import convert_features_to_dataset
 from farm.utils import MLFlowLogger as MlLogger
 
+from tqdm import tqdm
 
 logger = logging.getLogger(__name__)
 
@@ -165,7 +164,7 @@ class Processor(ABC):
         :param save_dir: Directory where the files are to be saved
         :type save_dir: str
         """
-        create_folder(save_dir)
+        os.makedirs(save_dir, exist_ok=True)
         config = {}
         config["tokenizer"] = self.tokenizer.__class__.__name__
         self.tokenizer.save_vocabulary(save_dir)
@@ -197,13 +196,13 @@ class Processor(ABC):
         ]
 
     def _init_samples_in_baskets(self):
-        for basket in self.baskets:
+        for basket in tqdm(self.baskets):
             basket.samples = self._dict_to_samples(basket.raw)
             for num, sample in enumerate(basket.samples):
                 sample.id = f"{basket.id}-{num}"
 
     def _featurize_samples(self):
-        for basket in self.baskets:
+        for basket in tqdm(self.baskets):
             for sample in basket.samples:
                 sample.features = self._sample_to_features(sample=sample)
 

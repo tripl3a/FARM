@@ -1,5 +1,7 @@
 from farm.data_handler.utils import get_sentence_pair
 from pytorch_transformers.tokenization_bert import whitespace_tokenize
+from farm.visual.ascii.images import SAMPLE
+from tqdm import tqdm
 
 import logging
 
@@ -69,11 +71,12 @@ class Sample(object):
         else:
             tokenized_str = "None"
         s = (
-            "*** Example ***\n"
+            f"\n{SAMPLE}\n"
             f"ID: {self.id}\n"
             f"Clear Text: \n \t{clear_text_str}\n"
-            f"Tokenized: \n \t {tokenized_str}\n"
-            f"Features: \n \t{feature_str}"
+            f"Tokenized: \n \t{tokenized_str}\n"
+            f"Features: \n \t{feature_str}\n"
+            "_____________________________________________________"
         )
         return s
 
@@ -120,7 +123,7 @@ def create_samples_sentence_pairs(baskets):
     """Creates examples for Language Model Finetuning that consist of two sentences and the isNext label indicating if
      the two are subsequent sentences from one doc"""
     all_docs = [b.raw["doc"] for b in baskets]
-    for basket in baskets:
+    for basket in tqdm(baskets):
         doc = basket.raw["doc"]
         basket.samples = []
         for idx in range(len(doc) - 1):
