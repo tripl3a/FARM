@@ -4,9 +4,7 @@ from farm.experiment import run_experiment, load_experiments
 def main():
     config_files = [
         "experiments/text_classification/noHateCoarse_config08.json",
-        "experiments/text_classification/noHateCoarse_config09.json",
-        "experiments/text_classification/noHateCoarse_config10.json",
-        "experiments/text_classification/noHateCoarse_config11.json"
+        "experiments/text_classification/noHateCoarse_config09.json"
     ]
 
     for conf_file in config_files:
