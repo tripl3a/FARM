@@ -368,9 +368,9 @@ class NoHateCoarseProcessor(Processor):
         max_seq_len,
         data_dir,
         train_filename="coarse_train.tsv",
-        dev_filename=None,
+        dev_filename="coarse_dev.tsv",
         test_filename="coarse_test.tsv",
-        dev_split=0.1,
+        dev_split=0.2
     ):
 
         super(NoHateCoarseProcessor, self).__init__(
