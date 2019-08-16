@@ -94,9 +94,9 @@ class AdaptiveModel(nn.Module):
         ph_output_type = []
         for config_file in ph_config_files:
             head = PredictionHead.load(config_file)
-            # set shared weights between LM and PH
-            if type(head) == BertLMHead:
-                head.set_shared_weights(language_model)
+            # # set shared weights between LM and PH
+            # if type(head) == BertLMHead:
+            #     head.set_shared_weights(language_model)
             prediction_heads.append(head)
             ph_output_type.append(head.ph_output_type)
 
@@ -255,7 +255,8 @@ class AdaptiveModel(nn.Module):
         Logs paramteres to generic logger MlLogger
         """
         params = {
-            "lm": self.language_model.__class__.__name__,
+            "lm_type": self.language_model.__class__.__name__,
+            "lm_name": self.language_model.name,
             "prediction_heads": ",".join(
                 [head.__class__.__name__ for head in self.prediction_heads]
             ),
