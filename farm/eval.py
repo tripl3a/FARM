@@ -5,6 +5,7 @@ import logging
 import numpy as np
 from seqeval.metrics import classification_report as token_classification_report
 from sklearn.metrics import classification_report
+from sklearn.metrics import r2_score
 from torch.utils.data import DataLoader
 
 from farm.metrics import compute_metrics
@@ -19,7 +20,7 @@ class Evaluator:
     """Handles evaluation of a given model over a specified dataset."""
 
     def __init__(
-        self, data_loader, label_maps, device, metrics, classification_report=True
+        self, data_loader, tasks, device, classification_report=True
     ):
         """
         :param data_loader: The PyTorch DataLoader that will return batches of data from the evaluation dataset
@@ -33,12 +34,12 @@ class Evaluator:
         """
 
         self.data_loader = data_loader
-        self.label_maps = label_maps
-
+        #self.label_maps = label_maps
+        self.tasks = tasks
         self.device = device
 
         # Where should metric be defined? When dataset loaded? In config?
-        self.metrics = metrics
+        #self.metrics = metrics
         self.classification_report = classification_report
 
     def eval(self, model):
@@ -68,12 +69,11 @@ class Evaluator:
                 logits = model.forward(**batch)
                 # TODO logits_to_loss should be a single, overloaded function
                 losses_per_head = model.logits_to_loss_per_head(logits=logits, **batch)
-
                 preds = model.logits_to_preds(
-                    logits=logits, label_maps=self.label_maps, **batch
+                    logits=logits, **batch
                 )
 
-                labels = model.prepare_labels(label_maps=self.label_maps, **batch)
+                labels = model.prepare_labels(**batch)
 
             # stack results of all batches per prediction head
             for head_num, head in enumerate(model.prediction_heads):
@@ -86,8 +86,7 @@ class Evaluator:
         for head_num, head in enumerate(model.prediction_heads):
             result = {"loss": loss_all[head_num] / len(self.data_loader.dataset)}
             result.update(
-                compute_metrics(
-                    self.metrics[head_num], preds_all[head_num], label_all[head_num]
+                compute_metrics(metric=head.metric, preds=preds_all[head_num], labels=label_all[head_num]
                 )
             )
 
@@ -99,11 +98,21 @@ class Evaluator:
                     report_fn = classification_report
                 elif head.ph_output_type == "per_token_squad":
                     report_fn = lambda *args, **kwargs: "not Implemented"
+                elif head.ph_output_type == "per_sequence_continuous":
+                    report_fn = r2_score
                 else:
                     raise NotImplementedError
-                result["report"] = report_fn(
-                    label_all[head_num], preds_all[head_num], digits=4
-                )
+
+                # CHANGE PARAMETERS, not all report_fn accept digits
+                if head.ph_output_type == "per_sequence_continuous":
+                    result["report"] = report_fn(
+                        label_all[head_num], preds_all[head_num]
+                    )
+                else:
+                    result["report"] = report_fn(
+                        label_all[head_num], preds_all[head_num], digits=4
+                    )
+
             all_results.append(result)
 
         return all_results
@@ -130,7 +139,7 @@ class Evaluator:
                 # print via standard python logger
                 if print:
                     if metric_name == "report":
-                        if len(metric_val) > 8000:
+                        if isinstance(metric_val, str) and len(metric_val) > 8000:
                             metric_val = metric_val[:7500] + "\n ............................. \n" + metric_val[-500:]
                         logger.info("{}: \n {}".format(metric_name, metric_val))
                     else:
