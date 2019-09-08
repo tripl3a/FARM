@@ -24,7 +24,7 @@ def main(args):
     set_all_seeds(seed=args.seed)
     ml_logger = MLFlowLogger(tracking_uri="https://public-mlflow.deepset.ai/")
     ml_logger.init_experiment(
-        experiment_name=args.experiment_name, run_name=args.run_name
+        experiment_name=args.mlflow_experiment, run_name=args.mlflow_run_name
     )
 
     device, n_gpu = initialize_device_settings(use_cuda=(not args.no_cuda))
@@ -36,7 +36,7 @@ def main(args):
 
     # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
     processor = BertStyleLMProcessor(
-        data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=args.max_seq_len, max_docs=30
+        data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=args.max_seq_length, max_docs=30
     )
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
     data_silo = DataSilo(processor=processor, batch_size=args.train_batch_size)
