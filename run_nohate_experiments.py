@@ -3,8 +3,10 @@ from farm.experiment import run_experiment, load_experiments
 
 def main():
     config_files = [
-        "experiments/text_classification/noHateCoarse_config08.json",
-        "experiments/text_classification/noHateCoarse_config09.json"
+        #"experiments/text_classification/noHateCoarse_config08.json",
+        #"experiments/text_classification/noHateCoarse_config09.json",
+        #"experiments/lm_finetuning/finetune_nohate_config.json",
+        "/home/arndt/git-reps/FARM/experiments/lm_finetuning/finetune_nohate_config.json"
     ]
 
     for conf_file in config_files:

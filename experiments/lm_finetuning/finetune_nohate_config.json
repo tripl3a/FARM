@@ -1,0 +1,56 @@
+{
+  "general": {
+    "cache_dir":   {"value": null,           "default": "", "desc": "Path for storing pre-trained models downloaded from s3."},
+    "data_dir":    {"value": "data/nohate",  "default": "", "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
+    "output_dir":  {"value": "saved_models", "default": "", "desc": "Output directory where model predictions and checkpoints will be saved."},
+
+    "cuda":        {"value": false, "default": true, "desc": "CUDA flag, uses CUDA if available."},
+    "local_rank":  {"value": null,  "default": -1,    "desc": "If local_rank == -1 -> multiGPU mode on one machine, other values signal distributed computation across several nodes (apex install required)."},
+    "fp16":        {"value": null,  "default": false, "desc": "Floating point precision. IF true it halves the precision and therefore the memory requirements,  so you can doulbe the batch size."},
+    "loss_scale":  {"value": null,  "default": 0,     "desc": "Loss scaling to improve fp16 numeric stability. Only used when fp16 set to True. 0 (default value): dynamic loss scaling. Positive power of 2: static loss scaling value."},
+
+    "seed":        {"value": null, "default": 42, "desc": "Random seed for initializations."},
+    "server_ip":   {"value": null, "default": "", "desc": "Can be used for distant debugging."},
+    "server_port": {"value": null, "default": "", "desc": "Can be used for distant debugging."}
+  },
+
+  "task": {
+    "name":            {"value": "nohate_lm_finetuning",                       "default": "",   "desc": "..."},
+    "output_mode":     {"value": ["per_token", "per_sequence"],                "default": "lm", "desc": "Used for data loading and evaluation. Choices: classification,  ner, lm  TBD"},
+    "prediction_head": {"value": ["lm_prediction_head", "next_sentence_head"], "default": "lm", "desc": "Prediction head on top of vanilla LM Model,  must correspond to task and data."},
+
+    "do_eval":         {"value": false, "default": false, "desc": "Whether to run eval on the dev set."},
+    "do_train":        {"value": true,  "default": true,  "desc": "Whether to run training. Can be used to only evaluate on an already trained model."},
+
+    "processor_name":  {"value": null, "default": "BertStyleLMProcessor", "desc": "Class name of DataProcessor."},
+    "dev_split":       {"value": null, "default": 0.1,              "desc": "Split a dev set from the training set using dev_split as proportion."},
+    "train_filename":  {"value": null, "default": "train.txt",      "desc": "Filename for training."},
+    "dev_filename":    {"value": null, "default": "dev.txt",        "desc": "Filename for development."},
+    "test_filename":   {"value": null, "default": "test.txt",       "desc": "Filename for testing."}
+  },
+
+  "parameter": {
+    "model":           {"value": "bert-base-german-cased", "default": null,  "desc": "Bert pre-trained model selected in the list: bert-base-uncased,  bert-large-uncased,  bert-base-cased,  bert-large-cased,  bert-base-multilingual-uncased,  bert-base-multilingual-cased,  bert-base-chinese."},
+    "lower_case":      {"value": null,                     "default": false, "desc": "Set to true if you are using an uncased model."},
+    "max_seq_len":     {"value": 128,                      "default": 128,   "desc": "The maximum total input sequence length after WordPiece tokenization. 128 was too short for some texts"},
+    "balance_classes": {"value": null,                     "default": true,  "desc": "Balance classes using weighted CrossEntropyLoss. Original train set from GermEval18 is skewed and the final evaluation is macro averaged,  so we need to balance for optimal performance.."},
+
+    "learning_rate":      {"value": 2e-5, "default": null, "desc": "The initial learning rate for Adam."},
+    "warmup_proportion":  {"value": 0.1, "default": null,  "desc": "Proportion of training to perform linear learning rate warmup for. E.g.,  0.1 = 10%% of training."},
+
+    "num_train_epochs":             {"value": 0.01,  "default": 1.0, "desc": "Total number of training epochs to perform."},
+    "batch_size":                   {"value": 32,   "default": 64,  "desc": ""},
+    "gradient_accumulation_steps":  {"value": null, "default": 1,   "desc": "Number of updates steps (batches) to accumulate before performing a backward/update pass."}
+  },
+
+  "logging": {
+    "eval_every":     {"value": 1000,                                "default": 30,   "desc": "Steps per training loop (batches) required for evaluation on dev set. Set to 0 when you do not want to do evaluation on dev set during training."},
+    "mlflow_url":     {"value": "https://public-mlflow.deepset.ai/", "default": null, "desc": "Mlflow server for tracking experiments (e.g. http://80.123.45.167:5000/)"},
+    "mlflow_nested":  {"value": null,                                "default": true, "desc": "Nesting mlflow experiments. For doing multiple runs across a set of hyperparameters."},
+
+    "mlflow_experiment": {"value": "NOHATE", "default": null, "desc": "Experiment name used for mlflow"},
+    "mlflow_run_name":   {"value": "LM_finetuning_by_config",        "default": null, "desc": "Name of the particular run for mlflow"}
+  }
+}
+
+
