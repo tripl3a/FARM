@@ -1,7 +1,5 @@
 import logging
-
 import torch
-
 from farm.data_handler.data_silo import DataSilo
 from farm.data_handler.processor import BertStyleLMProcessor
 from farm.modeling.adaptive_model import AdaptiveModel
@@ -10,44 +8,45 @@ from farm.modeling.prediction_head import BertLMHead, NextSentenceHead
 from farm.modeling.tokenization import BertTokenizer
 from farm.train import Trainer
 from farm.modeling.optimization import initialize_optimizer
-
 from farm.utils import set_all_seeds, MLFlowLogger, initialize_device_settings
 import argparse
 from utils import tools
 
+
 def main(args):
+
     logging.basicConfig(
         format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
         datefmt="%m/%d/%Y %H:%M:%S",
         level=logging.INFO,
     )
 
-    set_all_seeds(seed=42)
+    set_all_seeds(seed=args.seed)
     ml_logger = MLFlowLogger(tracking_uri="https://public-mlflow.deepset.ai/")
     ml_logger.init_experiment(
-        experiment_name="NOHATE", run_name="LM_finetuning"
+        experiment_name=args.experiment_name, run_name=args.run_name
     )
 
-    device, n_gpu = initialize_device_settings(use_cuda=args.use_cuda)
+    device, n_gpu = initialize_device_settings(use_cuda=(not args.no_cuda))
 
     # 1.Create a tokenizer
     tokenizer = BertTokenizer.from_pretrained(
-        pretrained_model_name_or_path=lang_model, do_lower_case=False
+        pretrained_model_name_or_path=args.bert_model, do_lower_case=args.do_lower_case
     )
 
     # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
     processor = BertStyleLMProcessor(
-        data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=128, max_docs=30
+        data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=args.max_seq_len, max_docs=30
     )
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
     data_silo = DataSilo(processor=processor, batch_size=args.train_batch_size)
 
     # 4. Create an AdaptiveModel
     # a) which consists of a pretrained language model as a basis
-    language_model = Bert.load(lang_model)
+    language_model = Bert.load(args.bert_model)
     # b) and *two* prediction heads on top that are suited for our task => Language Model finetuning
-    lm_prediction_head = BertLMHead.load(lang_model)
-    next_sentence_head = NextSentenceHead.load(lang_model)
+    lm_prediction_head = BertLMHead.load(args.bert_model)
+    next_sentence_head = NextSentenceHead.load(args.bert_model)
 
     model = AdaptiveModel(
         language_model=language_model,
@@ -60,20 +59,20 @@ def main(args):
     # 5. Create an optimizer
     optimizer, warmup_linear = initialize_optimizer(
         model=model,
-        learning_rate=2e-5,
-        warmup_proportion=0.1,
+        learning_rate=args.learning_rate,
+        warmup_proportion=args.warmup_proportion,
         n_batches=len(data_silo.loaders["train"]),
-        n_epochs=num_train_epochs,
+        n_epochs=args.num_train_epochs,
     )
 
     # 6. Feed everything to the Trainer, which keeps care of growing our model into powerful plant and evaluates it from time to time
     trainer = Trainer(
         optimizer=optimizer,
         data_silo=data_silo,
-        epochs=num_train_epochs,
+        epochs=args.num_train_epochs,
         n_gpu=n_gpu,
         warmup_linear=warmup_linear,
-        evaluate_every=evaluate_every,
+        evaluate_every=args.eval_every,
         device=device,
     )
 
@@ -98,9 +97,7 @@ if __name__ == "__main__":
     parser.add_argument("--output_dir", default=None, type=str, required=True,
                         help="The output directory where the model checkpoints will be written.")
 
-    # Optional parameters
-    parser.add_argument("--use_cuda", default=False, action='store_true',
-                        help="Whether to use CUDA, if available.")
+    # Optional FARM parameters
     parser.add_argument("--warmup_proportion",
                         default=0.1,
                         type=float,
@@ -112,6 +109,10 @@ if __name__ == "__main__":
                         type=int,
                         help="Steps per training loop (batches) required for evaluation on dev set. \n"
                              "Set to 0 when you do not want to do evaluation on dev set during training.")
+    parser.add_argument("--mlflow_experiment", default="NOHATE", type=str,
+                        help="Experiment name used for MLflow.")
+    parser.add_argument("--mlflow_run_name", default="LM_finetuning_run", type=str,
+                        help="Name of the particular run for MLflow")
 
     ## Other parameters, as in Huggingface's `simple_lm_finetuning`
     parser.add_argument("--max_seq_length",
@@ -143,14 +144,14 @@ if __name__ == "__main__":
                         default=0,
                         type=int,
                         help="Linear warmup over warmup_steps.")
-    # parser.add_argument("--no_cuda",
-    #                     action='store_true',
-    #                     help="Whether not to use CUDA when available")
+    parser.add_argument("--no_cuda",
+                        action='store_true', default=False,
+                        help="Whether not to use CUDA when available")
     # parser.add_argument("--on_memory",
     #                     action='store_true',
     #                     help="Whether to load train samples into memory or use disk")
     parser.add_argument("--do_lower_case",
-                        action='store_true',
+                        action='store_true', default=False,
                         help="Whether to lower case the input text. True for uncased models, False for cased models.")
     parser.add_argument("--local_rank",
                         type=int,
