@@ -23,7 +23,7 @@
     "do_train":        {"value": true,  "default": true,  "desc": "Whether to run training. Can be used to only evaluate on an already trained model."},
 
     "processor_name":  {"value": null, "default": "BertStyleLMProcessor", "desc": "Class name of DataProcessor."},
-    "dev_split":       {"value": null, "default": 0.1,              "desc": "Split a dev set from the training set using dev_split as proportion."},
+    "dev_split":       {"value": null, "default": 0.0,              "desc": "Split a dev set from the training set using dev_split as proportion."},
     "train_filename":  {"value": null, "default": "train.txt",      "desc": "Filename for training."},
     "dev_filename":    {"value": null, "default": "dev.txt",        "desc": "Filename for development."},
     "test_filename":   {"value": null, "default": "test.txt",       "desc": "Filename for testing."}

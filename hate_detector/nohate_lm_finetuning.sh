@@ -8,5 +8,7 @@ python nohate_lm_finetuning.py \
   --train_batch_size=8 \
   --eval_every=100 \
   --warmup_proportion=0.1 \
-  --mlflow_run_name="LM_finetuning_debug"
+  --mlflow_run_name="LM_finetuning_debug" \
+  --max_docs=30 \
+  --embeds_dropout_prob=0.1
 

@@ -36,7 +36,7 @@ def main(args):
 
     # 2. Create a DataProcessor that handles all the conversion from raw text into a pytorch Dataset
     processor = BertStyleLMProcessor(
-        data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=args.max_seq_length, max_docs=30
+        data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=args.max_seq_length, max_docs=args.max_docs
     )
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
     data_silo = DataSilo(processor=processor, batch_size=args.train_batch_size)
@@ -51,7 +51,7 @@ def main(args):
     model = AdaptiveModel(
         language_model=language_model,
         prediction_heads=[lm_prediction_head, next_sentence_head],
-        embeds_dropout_prob=0.1,
+        embeds_dropout_prob=args.embeds_dropout_prob,
         lm_output_types=["per_token", "per_sequence"],
         device=device,
     )
@@ -102,6 +102,14 @@ if __name__ == "__main__":
                         default=0.1,
                         type=float,
                         help="Proportion of training to perform linear learning rate warmup for. E.g., 0.1 = 10%% of training.")
+    parser.add_argument("--embeds_dropout_prob",
+                        default=0.1,
+                        type=float,
+                        help="The probability that a value in the embeddings returned by the language model will be zeroed.")
+    parser.add_argument("--max_docs",
+                        type=int,
+                        default=None,
+                        help="How many max. documents to read from the txt file.")
 
     # Logging
     parser.add_argument("--eval_every",
