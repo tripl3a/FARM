@@ -10,9 +10,6 @@ from farm.train import Trainer
 from farm.modeling.optimization import initialize_optimizer
 from farm.utils import set_all_seeds, MLFlowLogger, initialize_device_settings
 import argparse
-
-# add parent directory to path in order to import utils
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils import tools
 
 
