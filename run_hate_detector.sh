@@ -8,22 +8,25 @@ if [ "$HOSTNAME" = "tripl3a-t440s" ]; then
   export OUTPUT_DIR=/tlhd/models/nohate01
 fi
 
-if [ "$RUN_PY_SCRIPT" = hate_detector/nohate_clf_train.py ]; then
-  echo "*********************************"
-  echo "Running Python script: " $RUN_PY_SCRIPT
-  echo "with args..." $RUN_PY_SCRIPT
-  echo "--> CACHE_DIR=" $CACHE_DIR
-  echo "--> DATA_DIR=" $DATA_DIR
-  echo "--> OUTPUT_DIR=" $OUTPUT_DIR
-  echo "*********************************"
-  python $RUN_PY_SCRIPT  \
-    --cache_dir $CACHE_DIR \
-    --data_dir $DATA_DIR \
-    --output_dir $OUTPUT_DIR
-else
-  echo "Running Python script: " $RUN_PY_SCRIPT
-  python $RUN_PY_SCRIPT
-fi
+case "$RUN_PY_SCRIPT" in
+  hate_detector/nohate_clf_train.py)
+    echo "*********************************"
+    echo "Running Python script: " $RUN_PY_SCRIPT
+    echo "with args..." $RUN_PY_SCRIPT
+    echo "--> CACHE_DIR=" $CACHE_DIR
+    echo "--> DATA_DIR=" $DATA_DIR
+    echo "--> OUTPUT_DIR=" $OUTPUT_DIR
+    echo "*********************************"
+    python $RUN_PY_SCRIPT  \
+      --cache_dir $CACHE_DIR \
+      --data_dir $DATA_DIR \
+      --output_dir $OUTPUT_DIR
+    ;;
+  *)
+    echo "Running Python script: " $RUN_PY_SCRIPT
+    python $RUN_PY_SCRIPT
+    ;;
+esac
 
 
 
