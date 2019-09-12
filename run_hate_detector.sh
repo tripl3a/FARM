@@ -23,7 +23,7 @@ case "$RUN_PY_SCRIPT" in
       --output_dir $OUTPUT_DIR
     ;;
   hate_detector/nohate_lm_finetuning.py)
-    python /network-ceph/aallhorn/code/FARM/hate_detector/nohate_lm_finetuning.py \
+    python $RUN_PY_SCRIPT \
       --bert_model=$BERT_MODEL \
       --data_dir=$DATA_DIR \
       --output_dir=$OUTPUT_DIR \
