@@ -25,7 +25,3 @@ flask-restplus
 flask-cors
 # optional: for inference with fasttext
 fasttext==0.9.1
-
-
-# for NoHate
-SoMaJo==1.10.5
