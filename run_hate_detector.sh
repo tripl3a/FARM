@@ -35,6 +35,7 @@ case "$RUN_PY_SCRIPT" in
       --warmup_proportion=$WARMUP_PROPORTION \
       --mlflow_run_name=$MLFLOW_RUN_NAME \
       --embeds_dropout_prob=$EMBEDS_DROPOUT_PROB
+      ;;
   *)
     echo "Running Python script: " $RUN_PY_SCRIPT
     python $RUN_PY_SCRIPT
