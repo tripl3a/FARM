@@ -1,3 +1,4 @@
+import datetime
 import logging
 import torch
 from farm.data_handler.data_silo import DataSilo
@@ -10,7 +11,10 @@ from farm.train import Trainer
 from farm.modeling.optimization import initialize_optimizer
 from farm.utils import set_all_seeds, MLFlowLogger, initialize_device_settings
 import argparse
-from utils import tools
+
+
+def get_current_datetime():
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 def main(args):
@@ -185,6 +189,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     print("Arguments: " + str(args))
-    print("Start datetime:", tools.get_current_datetime())
+    print("Start datetime:", get_current_datetime())
     main(args)
-    print("End datetime:", tools.get_current_datetime())
+    print("End datetime:", get_current_datetime())
