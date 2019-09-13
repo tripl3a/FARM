@@ -22,7 +22,7 @@
     "do_train":         {"value": null, "default": true,                        "desc": "Whether to run training. Can be used to only evaluate on an already trained model."},
 
     "processor_name":   {"value": null, "default": "TextClassificationProcessor","desc": "A Dataprocessor that is suited for tabular data. Needs special data parameters defined."},
-    "dev_split":        {"value": [0.1, 0.2], "default": 0.1,                         "desc": "Split a dev set from the training set using dev_split as proportion."},
+    "dev_split":        {"value": 0.2, "default": 0.1,                         "desc": "Split a dev set from the training set using dev_split as proportion."},
     "train_filename":   {"value": null, "default": "train.tsv",                 "desc": "Filename for training."},
     "dev_filename":     {"value": null, "default": null,                        "desc": "Filename for development. Missing in case of GermEval2018."},
     "test_filename":    {"value": null, "default": "test.tsv",                  "desc": "Filename for testing. It is the submission file from competition."},
