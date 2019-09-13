@@ -27,9 +27,10 @@
 What is it?
 ############
 FARM makes cutting edge **Transfer Learning** for NLP simple.
-It is a home for all species of pretrained language models (e.g. BERT) that can be adapted to **different down-stream tasks**.
-The aim is to make it simple to perform document classification, NER and question answering, for example, using the one language model.
-The **standardized interfaces** for language models and prediction heads allow flexible extension by researchers and easy adaptation for practitioners.
+It is a home for all species of pretrained language models (e.g. BERT) that can be adapted to different
+**domain languages** or **down-stream tasks**.
+With FARM you can easily create SOTA NLP models for tasks like document classification, NER or question answering.
+The **standardized interfaces** for language models and prediction heads allow flexible extension by researchers and easy application for practitioners.
 Additional experiment tracking and visualizations support you along the way to adapt a SOTA model to your own NLP problem and have a **very fast proof-of-concept**.
 
 Core features
@@ -97,6 +98,25 @@ Metrics and parameters of your model training get automatically logged via MLflo
 One docker container exposes a REST API (localhost:5000) and another one runs a simple demo UI (localhost:3000).
 You can use both of them individually and mount your own models. Check out the docs for details.
 
+Core concepts
+#########################
+Model
+************
+AdaptiveModel = Language Model + Prediction Head(s)
+With this modular approach you can easily add prediction heads (multitask learning) and re-use them for different types of language model.
+`(Learn more) <https://farm.deepset.ai/modeling.html>`_
+
+
+.. image:: https://raw.githubusercontent.com/deepset-ai/FARM/master/docs/img/adaptive_model_no_bg_small.jpg
+
+
+Data Processing
+********************
+Custom Datasets can be loaded by customizing the Processor. It converts "raw data" into PyTorch Datasets.
+Much of the heavy lifting is then handled behind the scenes to make it fast & simple to debug.
+`(Learn more) <https://farm.deepset.ai/data_handling.html>`_
+
+.. image:: https://raw.githubusercontent.com/deepset-ai/FARM/master/docs/img/data_silo_no_bg_small.jpg
 
 Upcoming features
 ###################
@@ -104,3 +124,10 @@ Upcoming features
 - SOTA adaptation strategies (Adapter Modules, Discriminative Fine-tuning ...)
 - Enabling large scale deployment for production
 - Additional Visualizations and statistics to explore and debug your model
+
+
+Citation
+###################
+As of now there is no published paper on FARM. If you want to use or cite our framework, please include
+the link to this repository. If you are working with the German Bert model, you can link our
+`blog post <https://deepset.ai/german-bert>`_ describing its training details and performance.

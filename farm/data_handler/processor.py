@@ -37,7 +37,7 @@ from farm.data_handler.utils import (
     is_json,
 )
 from farm.modeling.tokenization import BertTokenizer, tokenize_with_metadata
-from farm.utils import MLFlowLogger as MlLogger
+from farm.utils import MLFlowLogger as MlLogger, log_ascii_workers
 from farm.data_handler.samples import get_sentence_pair
 
 logger = logging.getLogger(__name__)
@@ -71,8 +71,6 @@ class Processor(ABC):
         use_multiprocessing=True
     ):
         """
-        Initialize a generic Processor
-
         :param tokenizer: Used to split a sentence (str) into tokens.
         :param max_seq_len: Samples are truncated after this many tokens.
         :type max_seq_len: int
@@ -87,12 +85,15 @@ class Processor(ABC):
         :type dev_split: float
         :param data_dir: The directory in which the train, test and perhaps dev files can be found.
         :type data_dir: str
+        :param multiprocessing_chunk_size: TODO
         :param max_processes: maximum number of processing to use for Multiprocessing.
         :type max_processes: int
         :param share_all_baskets_for_multiprocessing: TODO
         :type share_all_baskets_for_multiprocessing: bool
-        :param tasks: TODO
+        :param tasks: A dictionary where the keys are the names of the tasks and the values are the details of the task (e.g. label_list, metric, tensor name)
         :type tasks: dict
+        :param use_multiprocessing: Whether to use multiprocessing or not
+        :type use_multiprocessing: bool
         """
 
         # The Multiprocessing functions in the Class are classmethods to avoid passing(and pickling) of class-objects
@@ -295,6 +296,7 @@ class Processor(ABC):
                 logger.info(
                     f"Got ya {num_cpus} parallel workers to fill the baskets with samples (chunksize = {self.multiprocessing_chunk_size})..."
                 )
+                log_ascii_workers(num_cpus, logger)
                 p = stack.enter_context(mp.Pool(processes=num_cpus))
                 manager = stack.enter_context(mp.Manager())
 

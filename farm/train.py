@@ -5,9 +5,10 @@ import torch
 from tqdm import tqdm
 
 from farm.utils import MLFlowLogger as MlLogger
+from farm.utils import format_log
 from farm.eval import Evaluator
 from farm.data_handler.data_silo import DataSilo
-from farm.visual.ascii.images import GROWING_TREE
+from farm.visual.ascii.images import GROWING_TREE, BUSH_SEP
 
 logger = logging.getLogger(__name__)
 
@@ -127,6 +128,9 @@ class Trainer:
         # connect the prediction heads with the right output from processor
         model.connect_heads_with_processor(self.data_silo.processor.tasks)
 
+        # Check that the tokenizer fits the language model
+        self.check_tokenizer_lm(self.data_silo.processor.tokenizer, model.language_model)
+
         logger.info(f"\n {GROWING_TREE}")
         model.train()
         # multi GPU + distributed settings
@@ -157,7 +161,7 @@ class Trainer:
                         self.global_step % self.evaluate_every == 0
                     ):
                         result = self.evaluator_dev.eval(model)
-                        self.evaluator_dev.log_results(result, "Val", self.global_step)
+                        self.evaluator_dev.log_results(result, "Dev", self.global_step)
 
                 self.global_step += 1
 
@@ -196,6 +200,11 @@ class Trainer:
         if self.grad_acc_steps > 1:
             loss = loss / self.grad_acc_steps
         return loss
+
+    def check_tokenizer_lm(self, tokenizer, lm):
+        tok_vocab_len = len(tokenizer.vocab)
+        model_vocab_len = lm.model.embeddings.word_embeddings.num_embeddings
+        assert tok_vocab_len == model_vocab_len, f"Tokenizer vocabulary (len: {tok_vocab_len}) does not match language model vocabulary (len: {model_vocab_len}). Please check that they are compatible"
 
     def log_params(self):
         params = {"epochs": self.epochs, "n_gpu": self.n_gpu, "device": self.device}
