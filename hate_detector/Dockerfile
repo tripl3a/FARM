@@ -14,6 +14,6 @@ RUN chmod +x /workspace/container_start.sh
 
 WORKDIR /workspace
 
-# docker build . -t registry.datexis.com/aallhorn/farm:0.0.7
-# docker push registry.datexis.com/aallhorn/farm:0.0.7
+# docker build . -t registry.datexis.com/aallhorn/farm:0.0.8 --no-cache
+# docker push registry.datexis.com/aallhorn/farm:0.0.8
 
