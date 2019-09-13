@@ -2,10 +2,10 @@
 
 if [ "$HOSTNAME" = "tripl3a-t440s" ]; then
   #export RUN_PY_SCRIPT=hate_detector/nohate_clf_train.py
-  export RUN_PY_SCRIPT=run_nohate_experiments.py
-  export CACHE_DIR=/tlhd/cache
-  export DATA_DIR=/tlhd/data/modeling/FU_data_subsample
-  export OUTPUT_DIR=/tlhd/models/nohate01
+  export RUN_PY_SCRIPT=run_all_experiments.py
+  #export CACHE_DIR=/tlhd/cache
+  #export DATA_DIR=/tlhd/data/modeling/FU_data_subsample
+  #export OUTPUT_DIR=/tlhd/models/nohate01
 fi
 
 case "$RUN_PY_SCRIPT" in
