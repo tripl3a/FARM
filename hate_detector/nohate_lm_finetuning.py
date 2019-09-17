@@ -31,7 +31,7 @@ def main(args):
         experiment_name=args.mlflow_experiment, run_name=args.mlflow_run_name
     )
 
-    distributed = bool(args.general.local_rank != -1)
+    distributed = bool(args.local_rank != -1)
 
     # Init device and distributed settings
     device, n_gpu = initialize_device_settings(
