@@ -25,13 +25,28 @@ def main(args):
         level=logging.INFO,
     )
 
-    set_all_seeds(seed=args.seed)
+
     ml_logger = MLFlowLogger(tracking_uri="https://public-mlflow.deepset.ai/")
     ml_logger.init_experiment(
         experiment_name=args.mlflow_experiment, run_name=args.mlflow_run_name
     )
 
-    device, n_gpu = initialize_device_settings(use_cuda=(not args.no_cuda))
+    distributed = bool(args.general.local_rank != -1)
+
+    # Init device and distributed settings
+    device, n_gpu = initialize_device_settings(
+        use_cuda=(not args.no_cuda),
+        local_rank=args.local_rank,
+        fp16=args.fp16,
+    )
+
+    args.train_batch_size = int(
+        args.train_batch_size // args.gradient_accumulation_steps
+    )
+    #if n_gpu > 1:
+    #    args.train_batch_size = args.train_batch_size * n_gpu
+
+    set_all_seeds(seed=args.seed)
 
     # 1.Create a tokenizer
     tokenizer = BertTokenizer.from_pretrained(
@@ -43,7 +58,11 @@ def main(args):
         data_dir=args.data_dir, tokenizer=tokenizer, max_seq_len=args.max_seq_length, max_docs=args.max_docs
     )
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
-    data_silo = DataSilo(processor=processor, batch_size=args.train_batch_size)
+    data_silo = DataSilo(
+        processor=processor,
+        batch_size=args.train_batch_size,
+        distributed=distributed,
+    )
 
     # 4. Create an AdaptiveModel
     # a) which consists of a pretrained language model as a basis
@@ -65,7 +84,10 @@ def main(args):
         model=model,
         learning_rate=args.learning_rate,
         warmup_proportion=args.warmup_proportion,
+        loss_scale=args.loss_scale,
+        fp16=args.fp16,
         n_batches=len(data_silo.loaders["train"]),
+        grad_acc_steps=args.gradient_accumulation_steps,
         n_epochs=args.num_train_epochs,
     )
 
@@ -75,6 +97,9 @@ def main(args):
         data_silo=data_silo,
         epochs=args.num_train_epochs,
         n_gpu=n_gpu,
+        grad_acc_steps=args.gradient_accumulation_steps,
+        fp16=args.fp16,
+        local_rank=args.local_rank,
         warmup_linear=warmup_linear,
         evaluate_every=args.eval_every,
         device=device,
@@ -165,26 +190,26 @@ if __name__ == "__main__":
     parser.add_argument("--do_lower_case",
                         action='store_true', default=False,
                         help="Whether to lower case the input text. True for uncased models, False for cased models.")
-    # parser.add_argument("--local_rank",
-    #                     type=int,
-    #                     default=-1,
-    #                     help="local_rank for distributed training on gpus")
+    parser.add_argument("--local_rank",
+                        type=int,
+                        default=-1,
+                        help="local_rank for distributed training on gpus")
     parser.add_argument('--seed',
                         type=int,
                         default=42,
                         help="random seed for initialization")
-    # parser.add_argument('--gradient_accumulation_steps',
-    #                     type=int,
-    #                     default=1,
-    #                     help="Number of updates steps to accumualte before performing a backward/update pass.")
-    # parser.add_argument('--fp16',
-    #                     action='store_true',
-    #                     help="Whether to use 16-bit float precision instead of 32-bit")
-    # parser.add_argument('--loss_scale',
-    #                     type=float, default=0,
-    #                     help="Loss scaling to improve fp16 numeric stability. Only used when fp16 set to True.\n"
-    #                          "0 (default value): dynamic loss scaling.\n"
-    #                          "Positive power of 2: static loss scaling value.\n")
+    parser.add_argument('--gradient_accumulation_steps',
+                        type=int,
+                        default=1,
+                        help="Number of updates steps to accumulate before performing a backward/update pass.")
+    parser.add_argument('--fp16',
+                        action='store_true',
+                        help="Whether to use 16-bit float precision instead of 32-bit")
+    parser.add_argument('--loss_scale',
+                        type=float, default=0,
+                        help="Loss scaling to improve fp16 numeric stability. Only used when fp16 set to True.\n"
+                             "0 (default value): dynamic loss scaling.\n"
+                             "Positive power of 2: static loss scaling value.\n")
 
     args = parser.parse_args()
 
