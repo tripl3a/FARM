@@ -6,7 +6,8 @@ def main():
         #"experiments/text_classification/noHateCoarse_config08.json",
         #"experiments/text_classification/noHateCoarse_config09.json",
         #"experiments/text_classification/germEval18Coarse_config_grid.json",
-        "experiments/text_classification/germEval18Coarse_config_best.json",
+        #"experiments/text_classification/germEval18Coarse_config_best.json",
+        "experiments/text_classification/noHateCoarse_config_grid10.json",
     ]
 
     for conf_file in config_files:
