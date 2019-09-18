@@ -204,7 +204,8 @@ if __name__ == "__main__":
                         help="Number of updates steps to accumulate before performing a backward/update pass.")
     parser.add_argument('--fp16',
                         action='store_true',
-                        help="Whether to use 16-bit float precision instead of 32-bit")
+                        help="Whether to use 16-bit float precision instead of 32-bit."
+                             "If true it halves the precision and therefore the memory requirements, so you can double the batch size.")
     parser.add_argument('--loss_scale',
                         type=float, default=0,
                         help="Loss scaling to improve fp16 numeric stability. Only used when fp16 set to True.\n"
