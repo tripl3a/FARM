@@ -193,7 +193,9 @@ if __name__ == "__main__":
     parser.add_argument("--local_rank",
                         type=int,
                         default=-1,
-                        help="local_rank for distributed training on gpus")
+                        help="local_rank for distributed training on GPUs."
+                             "If local_rank == -1 -> multiGPU mode on one machine, "
+                             "other values signal distributed computation across several nodes (apex install required).")
     parser.add_argument('--seed',
                         type=int,
                         default=42,
