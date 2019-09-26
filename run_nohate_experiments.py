@@ -8,7 +8,8 @@ def main():
         #"experiments/text_classification/germEval18Coarse_config_grid.json",
         #"experiments/text_classification/germEval18Coarse_config_best.json",
         #"experiments/text_classification/noHateCoarse_config_grid10.json",
-        "experiments/text_classification/germEval18Coarse_config_merged_grid.json",
+        #"experiments/text_classification/germEval18Coarse_config_merged_grid.json",
+        "experiments/text_classification/germEval18Coarse_config_merged_best.json",
     ]
 
     for conf_file in config_files:
