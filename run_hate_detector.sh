@@ -56,7 +56,8 @@ case "$RUN_PY_SCRIPT" in
       ;;
   *)
     echo "Running Python script: " $RUN_PY_SCRIPT
-    python $RUN_PY_SCRIPT
+    python $RUN_PY_SCRIPT \
+      $PARAMETERS
     ;;
 esac
 
