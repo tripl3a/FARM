@@ -35,20 +35,17 @@ def main():
     # train on GermEval 2018 data
     germeval_model, germeval_processor = train_germeval(device, n_gpu, tokenizer)
 
-    # Hooray! You have a model. Store it:
-    germeval_save_dir=args.output_dir + "/germeval"
-    germeval_model.save(germeval_save_dir)
-    germeval_processor.save(germeval_save_dir)
+    # train on NoHate data
+    nohate_model, nohate_processor = further_train_nohate(device, n_gpu, tokenizer, germeval_model)
 
-    nohate_model, nohate_processor = further_train_nohate(device, n_gpu, tokenizer, germeval_save_dir)
-    nohate_save_dir = args.output_dir + "/nohate"
-    nohate_model.save(nohate_save_dir)
-    nohate_processor.save(nohate_save_dir)
+    # store the model
+    nohate_model.save(args.output_dir)
+    nohate_processor.save(args.output_dir)
 
     #infer()
 
 
-def further_train_nohate(device, n_gpu, tokenizer, prev_model_dir):
+def further_train_nohate(device, n_gpu, tokenizer, model):
 
     ml_logger = MlLogger(tracking_uri="https://public-mlflow.deepset.ai/")
     ml_logger.init_experiment(experiment_name=args.mlflow_experiment,
@@ -77,21 +74,9 @@ def further_train_nohate(device, n_gpu, tokenizer, prev_model_dir):
         processor=processor,
         batch_size=args.train_batch_size)
 
-    # 4. Create an AdaptiveModel
-    # # a) which consists of a pretrained language model as a basis
-    # language_model = Bert.load(args.bert_model)
-    # # b) and a prediction head on top that is suited for our task => Text classification
-    # prediction_head = TextClassificationHead(
-    #     layer_dims=[768, len(processor.tasks["text_classification"]["label_list"])])
-    #
-    # model = AdaptiveModel(
-    #     language_model=language_model,
-    #     prediction_heads=[prediction_head],
-    #     embeds_dropout_prob=0.1,
-    #     lm_output_types=["per_sequence"],
-    #     device=device)
+    # 4. Load saved GermEval AdaptiveModel from disk
 
-    model = AdaptiveModel.load(prev_model_dir, device)
+    #model = AdaptiveModel.load(prev_model_dir, device)
 
     # 5. Create an optimizer
     optimizer, warmup_linear = initialize_optimizer(
@@ -243,7 +228,7 @@ if __name__ == "__main__":
                              "Set to 0 when you do not want to do evaluation on dev set during training.")
     parser.add_argument("--mlflow_experiment", default="NOHATE", type=str,
                         help="Experiment name used for MLflow.")
-    parser.add_argument("--mlflow_run_name", default="GermEval->NoHate clf fine-tuning", type=str,
+    parser.add_argument("--mlflow_run_name", default="GermEval->NoHate clf fine-tuning incl pred head", type=str,
                         help="Name of the particular run for MLflow")
 
     args = parser.parse_args()
