@@ -64,7 +64,7 @@ def further_train_nohate(device, n_gpu, tokenizer, model):
                                             labels=label_list,
                                             metric=metric,
                                             source_field="label",
-                                            train_filename="coarse_test.tsv",
+                                            train_filename="coarse_train.tsv",
                                             dev_filename="coarse_dev.tsv",
                                             test_filename="coarse_test.tsv"
                                             )
