@@ -120,7 +120,9 @@ def train_germeval(device, n_gpu, tokenizer):
                                             data_dir=args.germeval_data_dir,
                                             labels=label_list,
                                             metric=metric,
-                                            source_field="coarse_label"
+                                            source_field="coarse_label",
+                                            train_filename="train.tsv",
+                                            test_filename=None
                                             )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
