@@ -66,7 +66,8 @@ def further_train_nohate(device, n_gpu, tokenizer, model):
                                             source_field="label",
                                             train_filename="coarse_train.tsv",
                                             dev_filename="coarse_dev.tsv",
-                                            test_filename="coarse_test.tsv"
+                                            test_filename="coarse_test.tsv",
+                                            quote_char='"'
                                             )
 
     # 3. Create a DataSilo that loads several datasets (train/dev/test), provides DataLoaders for them and calculates a few descriptive statistics of our datasets
