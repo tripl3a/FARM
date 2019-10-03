@@ -7,11 +7,12 @@ def main():
         #"experiments/text_classification/noHateCoarse_config09.json",
         #"experiments/text_classification/germEval18Coarse_config_grid.json",
         #"experiments/text_classification/germEval18Coarse_config_best.json",
-        #"experiments/text_classification/noHateCoarse_config_grid10.json",
+        #"experiments/text_classification/noHateCoarse_config10_grid.json",
         #"experiments/text_classification/germEval18Coarse_config_merged_grid.json",
         #"experiments/text_classification/germEval18Coarse_config_merged_best.json",
-        #"experiments/text_classification/noHateCoarse_config_grid11.json",
-        "experiments/text_classification/noHateCoarse_config_grid12.json",
+        #"experiments/text_classification/noHateCoarse_config11_grid.json",
+        #"experiments/text_classification/noHateCoarse_config12_grid.json",
+        "experiments/text_classification/noHateCoarse_config13.json",
     ]
 
     for conf_file in config_files:
