@@ -155,7 +155,7 @@ class Trainer:
 
                 # determine if this is the last step
                 is_last_epoch = (epoch == self.epochs)
-                is_last_batch = (step == len(self.data_loader_train))
+                is_last_batch = (step == len(self.data_loader_train)-1)
                 is_last_step = (is_last_epoch and is_last_batch)
 
                 self.backward_propagate(per_sample_loss, step, is_last_step)
