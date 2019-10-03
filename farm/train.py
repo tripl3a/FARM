@@ -154,7 +154,7 @@ class Trainer:
                 per_sample_loss = model.logits_to_loss(logits=logits, **batch)
 
                 # determine if this is the last step
-                is_last_epoch = (epoch == self.epochs + 1)
+                is_last_epoch = (epoch == self.epochs)
                 is_last_batch = (step == len(self.data_loader_train))
                 is_last_step = (is_last_epoch and is_last_batch)
 
@@ -163,7 +163,7 @@ class Trainer:
                 # Perform  evaluation
                 if self.evaluator_dev is not None:
                     if self.global_step != 0 and (
-                        (self.global_step % self.evaluate_every) == 0 or
+                        (self.global_step % self.evaluate_every == 0) or
                         is_last_step
                     ):
                         result = self.evaluator_dev.eval(model)
