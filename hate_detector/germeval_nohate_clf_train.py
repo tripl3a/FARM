@@ -85,7 +85,8 @@ def further_train_nohate(device, n_gpu, tokenizer, model):
         learning_rate=args.learning_rate,
         warmup_proportion=0.1,
         n_batches=len(data_silo.loaders["train"]),
-        n_epochs=args.num_train_epochs)
+        n_epochs=args.num_train_epochs,
+        log_learning_rate=True)
 
     # 6. Feed everything to the Trainer, which keeps care of growing our model into powerful plant and evaluates it from time to time
     trainer = Trainer(
@@ -150,7 +151,8 @@ def train_germeval(device, n_gpu, tokenizer):
         learning_rate=args.learning_rate,
         warmup_proportion=0.1,
         n_batches=len(data_silo.loaders["train"]),
-        n_epochs=args.num_train_epochs)
+        n_epochs=args.num_train_epochs,
+        log_learning_rate=True)
 
     # 6. Feed everything to the Trainer, which keeps care of growing our model into powerful plant and evaluates it from time to time
     trainer = Trainer(

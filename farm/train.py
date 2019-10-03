@@ -197,7 +197,7 @@ class Trainer:
                 )
                 for param_group in self.optimizer.param_groups:
                     param_group["lr"] = lr_this_step
-                MlLogger.log_metrics({"Train_lr_this_step": lr_this_step}, step=self.global_step)
+                MlLogger.log_metrics({"learning_rate": lr_this_step}, step=self.global_step)
             self.optimizer.step()
             self.optimizer.zero_grad()
 

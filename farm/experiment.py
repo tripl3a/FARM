@@ -129,6 +129,7 @@ def run_experiment(args):
         n_batches=len(data_silo.loaders["train"]),
         grad_acc_steps=args.parameter.gradient_accumulation_steps,
         n_epochs=args.parameter.epochs,
+        log_learning_rate=True
     )
 
     trainer = Trainer(
