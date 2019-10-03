@@ -153,12 +153,18 @@ class Trainer:
                 logits = model.forward(**batch)
                 per_sample_loss = model.logits_to_loss(logits=logits, **batch)
 
-                self.backward_propagate(per_sample_loss, step)
+                # determine if this is the last step
+                is_last_epoch = (epoch == self.epochs + 1)
+                is_last_batch = (step == len(self.data_loader_train))
+                is_last_step = (is_last_epoch and is_last_batch)
+
+                self.backward_propagate(per_sample_loss, step, is_last_step)
 
                 # Perform  evaluation
                 if self.evaluator_dev is not None:
                     if self.global_step != 0 and (
-                        self.global_step % self.evaluate_every == 0
+                        (self.global_step % self.evaluate_every) == 0 or
+                        is_last_step
                     ):
                         result = self.evaluator_dev.eval(model)
                         self.evaluator_dev.log_results(result, "Dev", self.global_step)
@@ -170,9 +176,9 @@ class Trainer:
             self.evaluator_test.log_results(result, "Test", self.global_step)
         return model
 
-    def backward_propagate(self, loss, step):
+    def backward_propagate(self, loss, step, is_last_step=False):
         loss = self.adjust_loss(loss)
-        if self.global_step % 10 == 1:
+        if (self.global_step % 10 == 1) or is_last_step:
             MlLogger.log_metrics(
                 {"Train_loss_total": float(loss.detach().cpu().numpy())},
                 step=self.global_step,
