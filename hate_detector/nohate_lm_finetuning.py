@@ -104,7 +104,7 @@ def main(args):
         evaluate_every=args.eval_every,
         device=device,
         do_save_on_eval=args.do_save_on_eval,
-        save_dir=args.save_dir
+        save_dir=args.output_dir
     )
 
     # 7. Let it grow! Watch the tracked metrics live on the public mlflow server: https://public-mlflow.deepset.ai

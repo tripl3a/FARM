@@ -180,6 +180,7 @@ class Trainer:
                         # save the intermediate model, e.g. for later evaluation on down-stream tasks
                         if self.do_save_on_eval and not is_last_step:
                             sub_dir = f"{self.save_dir}/step{self.global_step}"
+                            logger.info(f"\n Saving intermediate model at step {self.global_step} in {sub_dir}.")
                             model.save(sub_dir)
                             self.data_silo.processor.save(sub_dir)
 
