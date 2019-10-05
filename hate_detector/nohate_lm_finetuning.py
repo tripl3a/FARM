@@ -103,6 +103,8 @@ def main(args):
         warmup_linear=warmup_linear,
         evaluate_every=args.eval_every,
         device=device,
+        do_save_on_eval=args.do_save_on_eval,
+        save_dir=args.save_dir
     )
 
     # 7. Let it grow! Watch the tracked metrics live on the public mlflow server: https://public-mlflow.deepset.ai
@@ -146,6 +148,9 @@ if __name__ == "__main__":
                         type=int,
                         help="Steps per training loop (batches) required for evaluation on dev set. \n"
                              "Set to 0 when you do not want to do evaluation on dev set during training.")
+    parser.add_argument("--do_save_on_eval",
+                        action='store_true', default=False,
+                        help="Whether to save an intermediate model upon each evaluation step.")
     parser.add_argument("--mlflow_experiment", default="NOHATE", type=str,
                         help="Experiment name used for MLflow.")
     parser.add_argument("--mlflow_run_name", default="LM_finetuning_run", type=str,

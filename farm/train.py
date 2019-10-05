@@ -67,7 +67,9 @@ class Trainer:
         evaluator_test=None,
         fp16=False,
         grad_acc_steps=1,
-        local_rank=-1
+        local_rank=-1,
+        do_save_on_eval=False,
+        save_dir=None
     ):
         """
         :param optimizer: An optimizer object that determines the learning strategy to be used during training
@@ -88,6 +90,10 @@ class Trainer:
         :param fp16: Whether to use floating point 16 mode.
         :type fp16: bool
         :param grad_acc_steps: TODO
+        :param do_save_on_eval: Whether to save an intermediate model upon each evaluation step.
+        :type do_save_on_eval: bool
+        :param save_dir: The directory in which the model should be saved. Only used if do_save_on_eval.
+        :type save_dir: str
         """
         self.data_silo = data_silo
         self.epochs = int(epochs)
@@ -103,6 +109,8 @@ class Trainer:
         self.device = device
         self.local_rank = local_rank
         self.log_params()
+        self.do_save_on_eval = do_save_on_eval
+        self.save_dir = save_dir
 
         # evaluator on dev set
         if evaluator_dev is None and self.data_silo.get_data_loader("dev"):
@@ -168,6 +176,12 @@ class Trainer:
                     ):
                         result = self.evaluator_dev.eval(model)
                         self.evaluator_dev.log_results(result, "Dev", self.global_step)
+
+                        # save the intermediate model, e.g. for later evaluation on down-stream tasks
+                        if self.do_save_on_eval and not is_last_step:
+                            sub_dir = f"{self.save_dir}/step{self.global_step}"
+                            model.save(sub_dir)
+                            self.data_silo.processor.save(sub_dir)
 
                 self.global_step += 1
 
