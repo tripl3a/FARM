@@ -1,19 +1,23 @@
 # coding=utf-8
-#%%
+
 from farm.infer import Inferencer
 import pandas as pd
 import os
+from sklearn.metrics import classification_report
 
-DATA_DIR = "/tlhd/data/modeling/FU_data_subsample"
-SAVE_DIR = "/tlhd/models/nohate01"
+#%%
+DATA_DIR = "/tlhd/data/modeling/FU_data_dev20"
+SAVE_DIR = "/tlhd/models/nohate_cfg13"
+#DATA_DIR = "/network-ceph/aallhorn/data/FU_data_dev20"
+#SAVE_DIR = "/network-ceph/aallhorn/output/nohate_cfg13"
 
 # load test data
-test_file = os.path.join(DATA_DIR, "coarse_test.tsv")
-df_test = pd.read_csv(filepath_or_buffer=test_file, delimiter="\t")
+valid_file = os.path.join(DATA_DIR, "coarse_dev.tsv")
+df = pd.read_csv(filepath_or_buffer=valid_file, delimiter="\t")
 
 # build list of dicts for FARM
 texts = []
-for text in df_test["text"].values:
+for text in df["text"].values:
     texts.append({"text": text})
 
 # Load saved model to make predictions
@@ -24,7 +28,7 @@ y_pred, probs = [], []
 i = 0
 for batch in result:
     for p in batch["predictions"]:
-        if df_test.iloc[i]["text"] != p["context"]:
+        if df.iloc[i]["text"] != p["context"]:
             raise Exception("Order of input data and inference results does not match!")
         i += 1
         y_pred.append(p["label"])
@@ -32,10 +36,21 @@ for batch in result:
 
 #%%
 df_result = pd.DataFrame({
-    "y_true": df_test["label"],
+    "y_true": df["label"],
     "y_pred": y_pred,
     "probability": probs,
-    "text": df_test["text"]
+    "pred_type": "null",
+    "text": df["text"]
 })
+
+df_result.loc[(df_result.y_true=="hate") & (df_result.y_pred=="hate"), "pred_type"] = "TP"
+df_result.loc[(df_result.y_true=="hate") & (df_result.y_pred=="nohate"), "pred_type"] = "FN"
+df_result.loc[(df_result.y_true=="nohate") & (df_result.y_pred=="hate"), "pred_type"] = "FP"
+df_result.loc[(df_result.y_true=="nohate") & (df_result.y_pred=="nohate"), "pred_type"] = "TN"
+
 print(df_result)
-df_result.to_csv(os.path.join(DATA_DIR, "coarse_test_infer_results.csv"))
+df_result.to_csv("/tlhd/docs/error-analysis/coarse_dev_infer_results.csv")
+
+#%%
+#df_result = pd.read_csv("/tlhd/docs/error-analysis/coarse_dev_infer_results.csv")
+print(classification_report(df_result.y_true, df_result.y_pred))
