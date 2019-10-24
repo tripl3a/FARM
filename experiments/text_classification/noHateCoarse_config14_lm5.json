@@ -15,7 +15,7 @@
   },
 
   "parameter": {
-    "model":            {"value": "/network-ceph/aallhorn/output/lm-finetuning-half-backup/step180000", "default": null, "desc": "Bert pre-trained model selected in the list: bert-base-uncased,  bert-large-uncased,  bert-base-cased,  bert-large-cased,  bert-base-multilingual-uncased,  bert-base-multilingual-cased,  bert-base-chinese."},
+    "model":            {"value": "/network-ceph/aallhorn/output/lm-finetuning/step360000", "default": null, "desc": "Bert pre-trained model selected in the list: bert-base-uncased,  bert-large-uncased,  bert-base-cased,  bert-large-cased,  bert-base-multilingual-uncased,  bert-base-multilingual-cased,  bert-base-chinese."},
     "prediction_head":  {"value": null,                     "default": "TextClassificationHead", "desc": "Kind of prediction head we use on top of Language Model"},
     "lm_output_type":   {"value": null,                     "default": "per_sequence",           "desc": "Language Model output."},
     "lower_case":       {"value": null,                     "default": false,                    "desc": "Set to true if you are using an uncased model."},
@@ -38,7 +38,7 @@
     "mlflow_nested":  {"value": null, "default": true, "desc": "Nesting mlflow experiments. For doing multiple runs across a set of hyperparameters."},
 
     "mlflow_experiment": {"value": "NOHATE",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
-    "mlflow_run_name":   {"value": "NoHateCoarse_config14_lm5", "default": null, "desc": "Name of the particular run for mlflow"}
+    "mlflow_run_name":   {"value": "NoHateCoarse_config14_fulllm5", "default": null, "desc": "Name of the particular run for mlflow"}
   },
 
   "task": {
