@@ -6,6 +6,8 @@ if [ "$HOSTNAME" = "tripl3a-t440s" ]; then
   #export CACHE_DIR=/tlhd/cache
   #export DATA_DIR=/tlhd/data/modeling/FU_data_subsample
   #export OUTPUT_DIR=/tlhd/models/nohate01
+else
+  nvidia-smi
 fi
 
 echo "Running Python script: " $RUN_PY_SCRIPT
