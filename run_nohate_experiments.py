@@ -16,8 +16,9 @@ def main():
         #"experiments/text_classification/noHateCoarse_config14_lm1.json",
         #"experiments/text_classification/noHateCoarse_config14_lm2.json",
         #"experiments/text_classification/noHateCoarse_config14_lm3.json",
-        "experiments/text_classification/noHateCoarse_config14_lm4.json",
-        "experiments/text_classification/noHateCoarse_config14_lm5.json",
+        #experiments/text_classification/noHateCoarse_config14_lm4.json",
+        #experiments/text_classification/noHateCoarse_config14_lm5.json",
+         "experiments/text_classification/noHateCoarse_local_mlflow.json"
     ]
 
     for conf_file in config_files:
