@@ -37,8 +37,8 @@
     "mlflow_url":     {"value": "http://mlflow-svc:5000/", "default": "https://public-mlflow.deepset.ai/", "desc": "Mlflow server for tracking experiments (e.g. http://80.123.45.167:5000/)"},
     "mlflow_nested":  {"value": null, "default": true, "desc": "Nesting mlflow experiments. For doing multiple runs across a set of hyperparameters."},
 
-    "mlflow_experiment": {"value": "NOHATE2",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
-    "mlflow_run_name":   {"value": "nohate_coarse_merged_split1", "default": null, "desc": "Name of the particular run for mlflow"}
+    "mlflow_experiment": {"value": "test",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
+    "mlflow_run_name":   {"value": "nohate_coarse_merged_restarts", "default": null, "desc": "Name of the particular run for mlflow"}
   },
 
   "task": {
