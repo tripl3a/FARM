@@ -1,7 +1,7 @@
 {
   "general": {
     "cache_dir":  {"value": "/network-ceph/aallhorn/cache", "default": null, "desc": "Path for storing pre-trained models downloaded from s3."},
-    "data_dir":   {"value": "/network-ceph/aallhorn/data/FU_data_merged", "default": null, "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
+    "data_dir":   {"value": "/network-ceph/aallhorn/data/FU_data_merged2", "default": null, "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
     "output_dir": {"value": "/network-ceph/aallhorn/output/nohate_coarse_merged_lm1_cp2", ",default": "saved_models", "desc": "Output directory where model predictions and checkpoints will be saved."},
 
     "cuda":        {"value": null, "default": true,  "desc": "CUDA flag,  uses CUDA if available."},
@@ -37,7 +37,7 @@
     "mlflow_url":     {"value": "http://mlflow-svc:5000/", "default": "https://public-mlflow.deepset.ai/", "desc": "Mlflow server for tracking experiments (e.g. http://80.123.45.167:5000/)"},
     "mlflow_nested":  {"value": null, "default": true, "desc": "Nesting mlflow experiments. For doing multiple runs across a set of hyperparameters."},
 
-    "mlflow_experiment": {"value": "NOHATE",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
+    "mlflow_experiment": {"value": "NOHATE2",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
     "mlflow_run_name":   {"value": "nohate_coarse_merged_lm1_cp2", "default": null, "desc": "Name of the particular run for mlflow"}
   },
 
