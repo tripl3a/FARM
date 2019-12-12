@@ -1,8 +1,8 @@
 {
   "general": {
     "cache_dir":  {"value": "/network-ceph/aallhorn/cache", "default": null, "desc": "Path for storing pre-trained models downloaded from s3."},
-    "data_dir":   {"value": "/network-ceph/aallhorn/data/FU_data_merged2", "default": null, "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
-    "output_dir": {"value": "/network-ceph/aallhorn/output/nohate_coarse_merged_split4", ",default": "saved_models", "desc": "Output directory where model predictions and checkpoints will be saved."},
+    "data_dir":   {"value": "/network-ceph/aallhorn/data/FU_data_merged", "default": null, "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
+    "output_dir": {"value": "/network-ceph/aallhorn/output/nohate_coarse_merged_fold4", ",default": "saved_models", "desc": "Output directory where model predictions and checkpoints will be saved."},
 
     "cuda":        {"value": null, "default": true,  "desc": "CUDA flag,  uses CUDA if available."},
     "local_rank":  {"value": null, "default": -1,    "desc": "If local_rank == -1 -> multiGPU mode on one machine,  other values signal distributed computation across several nodes (apex install required)."},
@@ -37,8 +37,8 @@
     "mlflow_url":     {"value": "http://mlflow-svc:5000/", "default": "https://public-mlflow.deepset.ai/", "desc": "Mlflow server for tracking experiments (e.g. http://80.123.45.167:5000/)"},
     "mlflow_nested":  {"value": null, "default": true, "desc": "Nesting mlflow experiments. For doing multiple runs across a set of hyperparameters."},
 
-    "mlflow_experiment": {"value": "NOHATE2",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
-    "mlflow_run_name":   {"value": "nohate_coarse_merged_split4", "default": null, "desc": "Name of the particular run for mlflow"}
+    "mlflow_experiment": {"value": "GermanBERT",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
+    "mlflow_run_name":   {"value": "nohate_coarse_merged_fold4", "default": null, "desc": "Name of the particular run for mlflow"}
   },
 
   "task": {
@@ -50,8 +50,8 @@
 
     "processor_name":   {"value": null, "default": "TextClassificationProcessor","desc": "A Dataprocessor that is suited for tabular data. Needs special data parameters defined."},
     "dev_split":        {"value": null,               "default": 0.1, "desc": "Split a dev set from the training set using dev_split as proportion."},
-    "train_filename":   {"value": "coarse_train_split4.tsv", "default": "train.tsv", "desc": "Filename for training."},
-    "dev_filename":     {"value": "coarse_dev_split4.tsv",   "default": null, "desc": "Filename for development. Missing in case of GermEval2018."},
+    "train_filename":   {"value": "coarse_train_fold4.tsv", "default": "train.tsv", "desc": "Filename for training."},
+    "dev_filename":     {"value": "coarse_dev_fold4.tsv",   "default": null, "desc": "Filename for development. Missing in case of GermEval2018."},
     "test_filename":    {"value": "coarse_test.tsv",  "default": "test.tsv", "desc": "Filename for testing. It is the submission file from competition."},
     "delimiter":        {"value": null,               "default": "\t", "desc": "..."},
     "quote_char":       {"value": "\"",               "default": "'", "desc": "..."},
