@@ -2,7 +2,7 @@
   "general": {
     "cache_dir":  {"value": "/network-ceph/aallhorn/cache", "default": null, "desc": "Path for storing pre-trained models downloaded from s3."},
     "data_dir":   {"value": "/network-ceph/aallhorn/data/FU_data_merged", "default": null, "desc": "Input directory for downstream task. Should contain train + test (+ dev) files."},
-    "output_dir": {"value": "/network-ceph/aallhorn/output/nohate_coarse_merged_rand_lm1cp5", ",default": "saved_models", "desc": "Output directory where model predictions and checkpoints will be saved."},
+    "output_dir": {"value": "/network-ceph/aallhorn/output/nohate_coarse_merged_rr10_lm1cp5_fold1", ",default": "saved_models", "desc": "Output directory where model predictions and checkpoints will be saved."},
 
     "cuda":        {"value": null, "default": true,  "desc": "CUDA flag,  uses CUDA if available."},
     "local_rank":  {"value": null, "default": -1,    "desc": "If local_rank == -1 -> multiGPU mode on one machine,  other values signal distributed computation across several nodes (apex install required)."},
@@ -38,7 +38,7 @@
     "mlflow_nested":  {"value": null, "default": true, "desc": "Nesting mlflow experiments. For doing multiple runs across a set of hyperparameters."},
 
     "mlflow_experiment": {"value": "Random",                         "default": "Public_FARM", "desc": "Experiment name used for mlflow"},
-    "mlflow_run_name":   {"value": "nohate_coarse_merged_rand_lm1cp5", "default": null, "desc": "Name of the particular run for mlflow"}
+    "mlflow_run_name":   {"value": "nohate_coarse_merged_rr10_lm1cp5_fold1", "default": null, "desc": "Name of the particular run for mlflow"}
   },
 
   "task": {
