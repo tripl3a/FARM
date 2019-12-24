@@ -8,7 +8,7 @@ from sklearn.metrics import classification_report
 #%%
 #DATA_DIR = "/tlhd/data/modeling/FU_data_dev20"
 #SAVE_DIR = "saved_models/nohate_cfg13"
-MODEL_DIR = "/network-ceph/aallhorn/output/nohate_coarse_merged_lm2cp3_fold1_best"
+MODEL_DIR = "/network-ceph/aallhorn/output/nohate_coarse_merged_lm2cp3_fold1_best/network-ceph/aallhorn/output/lm-finetuning/step216000-german-NoHateCoarse"
 IN_FILE = "/network-ceph/aallhorn/data/FU_data_merged/coarse_dev_fold1.tsv"
 OUT_FILE = "/network-ceph/aallhorn/error-analysis/merged_coarse_dev_infer_results.csv"
 
