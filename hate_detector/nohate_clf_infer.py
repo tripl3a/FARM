@@ -6,14 +6,14 @@ import os
 from sklearn.metrics import classification_report
 
 #%%
-DATA_DIR = "/tlhd/data/modeling/FU_data_dev20"
-SAVE_DIR = "/tlhd/models/nohate_cfg13"
-#DATA_DIR = "/network-ceph/aallhorn/data/FU_data_dev20"
-#SAVE_DIR = "/network-ceph/aallhorn/output/nohate_cfg13"
+#DATA_DIR = "/tlhd/data/modeling/FU_data_dev20"
+#SAVE_DIR = "saved_models/nohate_cfg13"
+MODEL_DIR = "/network-ceph/aallhorn/output/nohate_coarse_merged_lm2cp3_fold1_best"
+IN_FILE = "/network-ceph/aallhorn/data/FU_data_merged/coarse_dev.tsv"
+OUT_FILE = "/network-ceph/aallhorn/error-analysis/merged_coarse_dev_infer_results.csv"
 
 # load test data
-valid_file = os.path.join(DATA_DIR, "coarse_dev.tsv")
-df = pd.read_csv(filepath_or_buffer=valid_file, delimiter="\t")
+df = pd.read_csv(filepath_or_buffer=IN_FILE, delimiter="\t")
 
 # build list of dicts for FARM
 texts = []
@@ -21,7 +21,7 @@ for text in df["text"].values:
     texts.append({"text": text})
 
 # Load saved model to make predictions
-model = Inferencer.load(SAVE_DIR)
+model = Inferencer.load(MODEL_DIR)
 result = model.run_inference(dicts=texts)
 
 y_pred, probs = [], []
@@ -49,7 +49,7 @@ df_result.loc[(df_result.y_true=="nohate") & (df_result.y_pred=="hate"), "pred_t
 df_result.loc[(df_result.y_true=="nohate") & (df_result.y_pred=="nohate"), "pred_type"] = "TN"
 
 print(df_result)
-df_result.to_csv("/tlhd/docs/error-analysis/coarse_dev_infer_results.csv")
+df_result.to_csv(OUT_FILE)
 
 #%%
 #df_result = pd.read_csv("/tlhd/docs/error-analysis/coarse_dev_infer_results.csv")
